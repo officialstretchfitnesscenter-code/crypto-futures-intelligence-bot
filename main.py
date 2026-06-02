@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-AI Crypto Futures Market Intelligence Bot
-
-Main entry point for the bot.
+Crypto Market Intelligence Bot
+Telegram-based bot for market analysis and signals
 """
 
 import asyncio
@@ -12,22 +11,20 @@ from datetime import datetime
 from config import Config, get_config
 from utils.logger import get_logger, setup_logging
 from telegram.bot import TelegramBot
-from core.scanner import Scanner
 
 logger = None
 bot = None
-scanner = None
 
 async def main():
     """Main entry point"""
-    global logger, bot, scanner
+    global logger, bot
     
     # Setup logging
     setup_logging(Config.LOG_LEVEL)
     logger = get_logger(__name__)
     
     logger.info("="*60)
-    logger.info("AI Crypto Futures Market Intelligence Bot")
+    logger.info("Crypto Market Intelligence Bot")
     logger.info(f"Started at {datetime.utcnow().isoformat()} UTC")
     logger.info("="*60)
     
@@ -39,14 +36,11 @@ async def main():
         # Initialize Telegram bot
         bot = TelegramBot()
         await bot.initialize()
-        logger.info("Telegram bot initialized")
+        logger.info("Telegram bot initialized and running")
+        logger.info("Bot is ready for commands. Press Ctrl+C to stop.")
         
-        # Initialize scanner
-        scanner = Scanner(bot)
-        logger.info("Market scanner initialized")
-        
-        # Start scanning
-        await scanner.start()
+        # Keep bot running
+        await bot.run_polling()
         
     except KeyboardInterrupt:
         logger.info("Bot interrupted by user")
@@ -58,12 +52,9 @@ async def main():
 
 async def shutdown():
     """Graceful shutdown"""
-    global bot, scanner
+    global bot
     
     logger.info("Shutting down bot...")
-    
-    if scanner:
-        await scanner.stop()
     
     if bot:
         await bot.stop()

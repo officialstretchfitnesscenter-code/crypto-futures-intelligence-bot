@@ -1,32 +1,22 @@
-# AI Crypto Futures Market Intelligence Bot
+# Crypto Market Intelligence Bot
 
-A production-grade crypto futures market intelligence bot that monitors OKX USDT perpetual futures pairs, performs multi-timeframe analysis, and sends high-confidence trading alerts to Telegram.
+A production-grade Telegram bot for crypto market analysis and trading signals.
 
 ## Features
 
-- ✅ Hourly market scans across all OKX USDT perpetual pairs
-- ✅ Multi-timeframe analysis (15m, 1H, 4H, 1D)
-- ✅ Intraday and Swing trade support
-- ✅ Advanced confidence scoring (0-100 scale)
-- ✅ Market structure, trend, and volume analysis
-- ✅ Open Interest (OI) change tracking
-- ✅ Relative Volume (RVOL) analysis
-- ✅ Duplicate alert prevention with 6-hour cooldown
-- ✅ SQLite database for signal history
-- ✅ Telegram integration with structured alerts
-- ✅ Daily market summaries
-- ✅ Health monitoring and status reporting
-
-## Important
-
-**This bot is NOT an auto-trading bot.** It performs market analysis and sends alerts to Telegram. The user makes all final trading decisions.
+- ✅ Telegram command-based interface
+- ✅ Market signal management
+- ✅ Daily statistics tracking
+- ✅ Signal history database (SQLite)
+- ✅ Easy deployment to cloud servers
+- ✅ Lightweight and low resource usage
+- ✅ **Works in India** - No blocked exchange APIs
 
 ## Tech Stack
 
 - **Language:** Python 3.9+
 - **Database:** SQLite
-- **API Client:** OKX Public API
-- **Notifications:** Telegram Bot API
+- **Bot Framework:** python-telegram-bot
 - **Async:** asyncio
 
 ## Installation
@@ -44,17 +34,29 @@ Create a `.env` file in the root directory:
 TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_CHAT_ID=your_chat_id
 
-# OKX API
-OKX_API_KEY=your_api_key
-OKX_API_SECRET=your_api_secret
-OKX_PASSPHRASE=your_passphrase
-
 # Bot Configuration
-SCAN_INTERVAL_HOURS=1
-CONFIDENCE_THRESHOLD=88
-ALERT_COOLDOWN_HOURS=6
 ENABLE_DEBUG=False
+LOG_LEVEL=INFO
+
+# Database
+DATABASE_PATH=data/signals.db
+
+# Deployment
+ENVIRONMENT=production
 ```
+
+## Getting Telegram Credentials
+
+### 1. Create a Bot Token
+- Chat with [@BotFather](https://t.me/botfather) on Telegram
+- Send `/newbot` command
+- Follow the instructions
+- Copy your bot token
+
+### 2. Get Your Chat ID
+- Chat with [@userinfobot](https://t.me/userinfobot) on Telegram
+- Send `/start`
+- Copy your numeric Chat ID
 
 ## Usage
 
@@ -63,10 +65,22 @@ python main.py
 ```
 
 The bot will:
-1. Start scanning the market every 1 hour
-2. Send Telegram alerts for high-confidence signals
-3. Store all signals in the database
-4. Generate daily market summaries
+1. Start and listen for commands
+2. Respond to user commands
+3. Store signals in database
+4. Display statistics and history
+
+## Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `/start` | Start the bot |
+| `/help` | Show help message |
+| `/top` | Show top 10 signals |
+| `/buy` | Show BUY LONG signals |
+| `/sell` | Show SELL SHORT signals |
+| `/summary` | Daily market summary |
+| `/status` | Bot status and uptime |
 
 ## Project Structure
 
@@ -75,94 +89,115 @@ crypto-futures-intelligence-bot/
 ├── main.py                 # Entry point
 ├── requirements.txt        # Dependencies
 ├── .env                    # Configuration (create this)
+├── .env.example            # Configuration template
 ├── config.py              # Configuration management
 ├── database.py            # SQLite operations
-├── core/
-│   ├── __init__.py
-│   ├── okx_client.py      # OKX API client
-│   ├── analyzer.py        # Multi-timeframe analysis engine
-│   ├── confidence.py      # Confidence scoring
-│   ├── risk.py           # Risk classification
-│   └── scanner.py        # Market scanner
-├── models/
-│   ├── __init__.py
-│   ├── candle.py         # Candle data model
-│   ├── signal.py         # Signal model
-│   └── pair.py           # Trading pair model
 ├── telegram/
 │   ├── __init__.py
-│   ├── bot.py            # Telegram bot
-│   └── formatter.py      # Alert formatting
+│   ├── bot.py            # Telegram bot handler
+│   └── formatter.py      # Message formatting
 ├── utils/
 │   ├── __init__.py
-│   ├── logger.py         # Logging
-│   ├── cache.py          # Caching mechanism
+│   ├── logger.py         # Logging setup
 │   └── helpers.py        # Utility functions
 └── tests/
-    ├── __init__.py
-    ├── test_analyzer.py
-    └── test_signals.py
+    └── test_telegram_bot.py
 ```
 
-## Telegram Commands
+## Deployment
 
-- `/top` - Show top opportunities
-- `/buy` - Show recent BUY LONG signals
-- `/sell` - Show recent SELL SHORT signals
-- `/summary` - Get daily market summary
-- `/status` - Bot status and stats
-
-## Alert Format
-
+### Local Development
+```bash
+python main.py
 ```
-🚨 MARKET ALERT
 
-Coin: XRPUSDT
-Action: BUY LONG
-Type: SWING
-Confidence: 92%
-Risk: LOW
+### Cloud Hosting (Recommended)
+Deploy to any cloud platform that supports Python:
 
-Reason:
-• RVOL 4.2x above average
-• Open Interest +15%
-• 4H resistance breakout
-• Higher timeframe trend bullish
+**Heroku:**
+```bash
+heroku create your-bot-name
+git push heroku main
+```
 
-Bot View:
-Current market structure favors upside continuation.
+**Railway:**
+1. Connect your GitHub repo
+2. Deploy automatically
 
-Price: 2.35
-Timeframe: 4H
-Time: 2026-06-02 18:00 UTC
+**Google Cloud Run:**
+```bash
+gcloud run deploy crypto-bot --source . --platform managed
+```
+
+**AWS EC2:**
+1. Launch Ubuntu instance
+2. Install Python 3.9+
+3. Clone repo and run `python main.py`
+
+### Using systemd (Linux Servers)
+Create `/etc/systemd/system/crypto-bot.service`:
+```ini
+[Unit]
+Description=Crypto Market Intelligence Bot
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/crypto-futures-intelligence-bot
+ExecStart=/usr/bin/python3 main.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start:
+```bash
+sudo systemctl enable crypto-bot
+sudo systemctl start crypto-bot
+sudo systemctl status crypto-bot
 ```
 
 ## Database Schema
 
 Signals are stored with:
-- Coin
+- Coin name
 - Action (BUY LONG / SELL SHORT)
-- Signal Type (INTRADAY / SWING)
-- Confidence Score
-- Risk Level
+- Signal Type
+- Confidence Score (0-100)
+- Risk Level (LOW / MEDIUM / HIGH)
 - Analysis Reasons
-- Bot View
 - Price
 - Timeframe
 - Timestamp
-- 6-hour Cooldown
 
-## Key Restrictions
+## Inserting Signals Manually
 
-1. ❌ Never place trades
-2. ❌ Never auto-execute
-3. ❌ Never claim guaranteed profits
-4. ✅ User always makes final decision
-5. ✅ Focus on opportunity discovery
-6. ✅ Quality over quantity
-7. ✅ Minimize notification noise
-8. ✅ Only high-confidence alerts
+```python
+from database import db
+
+signal = {
+    'coin': 'BTCUSDT',
+    'action': 'BUY LONG',
+    'signal_type': 'SWING',
+    'confidence': 85,
+    'risk_level': 'LOW',
+    'reasons': 'Strong breakout with high volume',
+    'price': 42500.50,
+    'timeframe': '4H',
+    'timestamp': '2026-06-02 18:00:00'
+}
+
+db.insert_signal(signal)
+```
 
 ## License
 
 MIT
+
+## Support
+
+For issues and questions:
+- GitHub Issues: https://github.com/yasir069-cs/crypto-futures-intelligence-bot/issues
+- Telegram: @yasir069
