@@ -20,8 +20,8 @@ class TelegramBot:
     """Telegram bot for alerts and commands"""
     
     def __init__(self):
-        self.token = Config.TELEGRAM_BOT_TOKEN
-        self.chat_id = Config.TELEGRAM_CHAT_ID
+        self.token = Config.8816616926:AAHqoXYMbo5kGtXHrBidI8Oha2RvLaK86uM
+        self.chat_id = Config.1490359174
         self.app: Optional[Application] = None
         self.start_time = datetime.utcnow()
     
