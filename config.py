@@ -8,8 +8,8 @@ class Config:
     """Base configuration"""
     
     # Telegram
-    TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
-    TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
+    TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '8816616926:AAHqoXYMbo5kGtXHrBidI8Oha2RvLaK86uM')
+    TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '1490359174')
     
     # Bot Configuration
     ENABLE_DEBUG = os.getenv('ENABLE_DEBUG', 'False').lower() == 'true'
