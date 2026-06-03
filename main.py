@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 from config import Config, get_config
 from utils.logger import get_logger, setup_logging
-from telegram.bot import TelegramBot
+from bot_handlers.bot import TelegramBot
 
 logger = None
 bot = None
