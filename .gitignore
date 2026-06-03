@@ -1,18 +1,7 @@
-# Environment
-.env
-.env.local
-.venv/
+# Virtual Environment
 venv/
 env/
-
-# Database
-*.db
-*.sqlite
-data/
-
-# Logs
-logs/
-*.log
+ENV/
 
 # Python
 __pycache__/
@@ -20,9 +9,30 @@ __pycache__/
 *$py.class
 *.so
 .Python
-dist/
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
 *.egg-info/
+.installed.cfg
+*.egg
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+data/
 
 # IDE
 .vscode/
@@ -32,11 +42,15 @@ build/
 *~
 .DS_Store
 
-# Testing
+# Logging
+*.log
+logs/
+
+# Tests
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Caches
-.cache/
-*.cache
+# OS
+.DS_Store
+Thumbs.db
